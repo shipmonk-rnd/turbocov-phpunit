@@ -1,0 +1,76 @@
+{
+    "name": "shipmonk/turbocov-phpunit",
+    "description": "PHPUnit code coverage driver for the turbocov extension, which runs covered code at plain PHP speed",
+    "license": [
+        "MIT"
+    ],
+    "keywords": [
+        "code coverage",
+        "phpunit",
+        "testing",
+        "turbocov",
+        "pcov",
+        "xdebug"
+    ],
+    "require": {
+        "php": "^8.4",
+        "ext-turbocov": "*",
+        "phpunit/php-code-coverage": "^14.3"
+    },
+    "require-dev": {
+        "editorconfig-checker/editorconfig-checker": "10.7.0",
+        "ergebnis/composer-normalize": "2.48.2",
+        "phpstan/phpstan": "2.2.0",
+        "phpstan/phpstan-phpunit": "2.0.16",
+        "phpstan/phpstan-strict-rules": "2.0.11",
+        "phpunit/phpunit": "^13.3",
+        "shipmonk/coding-standard": "^0.2.4",
+        "shipmonk/composer-dependency-analyser": "1.8.4",
+        "shipmonk/dead-code-detector": "^1.0",
+        "shipmonk/name-collision-detector": "2.1.1",
+        "shipmonk/phpstan-rules": "4.3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "ShipMonk\\Turbocov\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ShipMonk\\Turbocov\\": "tests/"
+        },
+        "exclude-from-classmap": [
+            "tests/_fixtures/"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false,
+            "ergebnis/composer-normalize": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "check": [
+            "@check:composer",
+            "@check:ec",
+            "@check:cs",
+            "@check:types",
+            "@check:collisions",
+            "@check:dependencies",
+            "@check:tests"
+        ],
+        "check:collisions": "detect-collisions src tests",
+        "check:composer": [
+            "composer normalize --dry-run --no-update-lock",
+            "composer validate --strict",
+            "composer dump -o --strict-psr"
+        ],
+        "check:cs": "phpcs",
+        "check:dependencies": "composer-dependency-analyser",
+        "check:ec": "ec src tests stubs",
+        "check:tests": "phpunit tests",
+        "check:types": "phpstan analyse -vv --ansi",
+        "fix:cs": "phpcbf"
+    }
+}

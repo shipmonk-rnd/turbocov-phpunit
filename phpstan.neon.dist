@@ -1,0 +1,69 @@
+includes:
+    - phar://phpstan.phar/conf/config.levelmax.neon
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - ./vendor/phpstan/phpstan-strict-rules/rules.neon
+    - ./vendor/phpstan/phpstan-phpunit/extension.neon
+    - ./vendor/phpstan/phpstan-phpunit/rules.neon
+    - ./vendor/shipmonk/phpstan-rules/rules.neon
+    - ./vendor/shipmonk/dead-code-detector/rules.neon
+
+parameters:
+    phpVersion: 80400
+    paths:
+        - composer-dependency-analyser.php
+        - src
+        - tests
+    excludePaths:
+        analyseAndScan:
+            - tests/_fixtures/*
+    scanFiles:
+        - stubs/turbocov.php
+    tmpDir: cache/phpstan/
+    internalErrorsCountLimit: 1
+    checkMissingCallableSignature: true
+    checkUninitializedProperties: true
+    checkBenevolentUnionTypes: true
+    checkImplicitMixed: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkTooWideThrowTypesInProtectedAndPublicMethods: true
+    reportIgnoresWithoutComments: true
+    reportAnyTypeWideningInVarTag: true
+    reportPossiblyNonexistentConstantArrayOffset: true
+    reportPossiblyNonexistentGeneralArrayOffset: true
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            throwTypeCovariance: true
+            tooWideThrowType: true
+        implicitThrows: false
+        uncheckedExceptionClasses:
+            - LogicException
+            - Error
+
+    editorUrl: null
+    editorUrlTitle: '%%relFile%%:%%line%%'
+
+    shipmonkDeadCode:
+        usageExcluders:
+            tests:
+                enabled: true
+
+    shipmonkRules:
+        classSuffixNaming:
+            superclassToSuffixMapping:
+                Exception: Exception
+                PHPUnit\Framework\TestCase: Test
+                SebastianBergmann\CodeCoverage\Driver\Driver: Driver
+
+    ignoreErrors:
+        # PHPUnit creates the driver from the "driver" attribute of its configuration
+        -
+            identifier: shipmonk.deadMethod
+            message: "#TurbocovDriver::__construct#"
+            path: src/TurbocovDriver.php
+
+        # The driver contract of php-code-coverage is internal. The tests run against each supported version.
+        -
+            message: "#internal class SebastianBergmann\\\\CodeCoverage\\\\.*#"
+            paths:
+                - src/TurbocovDriver.php
