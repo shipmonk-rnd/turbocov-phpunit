@@ -34,17 +34,7 @@ The [README of turbocov](https://github.com/shipmonk-rnd/turbocov#readme) descri
 
 ## Behavior
 
-- The driver stops the run before the first test when turbocov cannot collect coverage. PHPUnit shows the reason. A wrong setup does not give an empty report.
-- The driver uses classes of `phpunit/php-code-coverage` that have no promise of backward compatibility. The tests of this package run with the lowest and the highest supported version.
-
-## Development
-
-The tests need the turbocov extension in `php.ini`. A `-d extension=` option is not sufficient, because the tests start more PHP processes.
-
-```sh
-composer check     # all checks
-composer fix:cs    # fix the coding style
-```
+The driver stops the run before the first test when turbocov cannot collect coverage. PHPUnit shows the reason. A wrong setup does not give an empty report.
 
 ## License
 
