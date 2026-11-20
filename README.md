@@ -4,6 +4,10 @@ PHPUnit coverage driver for the [turbocov](https://github.com/shipmonk-rnd/turbo
 
 PHPUnit knows only Xdebug and PCOV. This package gives it one class, `ShipMonk\Turbocov\TurbocovDriver`, that collects coverage with turbocov.
 
+turbocov has 400× less overhead than Xdebug and 30× less than PCOV:
+
+[![Time that a coverage driver adds to the test suite of Carbon](https://raw.githubusercontent.com/shipmonk-rnd/turbocov/master/turbocov-performance.svg)](https://github.com/shipmonk-rnd/turbocov#comparison)
+
 ## Installation
 
 ```sh
