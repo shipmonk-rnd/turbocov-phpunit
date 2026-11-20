@@ -17,8 +17,13 @@ jobs:
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: 8.5
-                    extensions: turbocov-shipmonk-rnd/turbocov@master
+                    tools: pie
                     coverage: none
+            -
+                # PIE adds the extension to the ini files. The tests start more PHP processes, and each must load it.
+                # PIE cannot ask for the sudo password without a terminal.
+                name: Install turbocov
+                run: sudo pie install shipmonk/turbocov:dev-master
             -
                 name: Install dependencies
                 run: composer update --no-progress --prefer-dist --no-interaction
@@ -42,9 +47,14 @@ jobs:
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php-version }}
-                    extensions: turbocov-shipmonk-rnd/turbocov@master
+                    tools: pie
                     coverage: none
                     ini-file: development
+            -
+                # PIE adds the extension to the ini files. The tests start more PHP processes, and each must load it.
+                # PIE cannot ask for the sudo password without a terminal.
+                name: Install turbocov
+                run: sudo pie install shipmonk/turbocov:dev-master
             -
                 name: Update dependencies
                 run: composer update --no-progress --${{ matrix.dependency-version }} --prefer-dist --no-interaction
