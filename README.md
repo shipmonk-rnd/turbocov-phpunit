@@ -1,16 +1,8 @@
 # turbocov for PHPUnit
 
-Code coverage driver that connects PHPUnit to the [turbocov](https://github.com/shipmonk-rnd/turbocov) extension.
+PHPUnit coverage driver for the [turbocov](https://github.com/shipmonk-rnd/turbocov) extension.
 
-turbocov collects line coverage, and covered code runs at the speed of plain PHP. Read the README of the extension for the mechanism, the settings and the limits.
-
-## Requirements
-
-- PHP 8.4 or 8.5
-- PHPUnit 13.3 or later
-- The turbocov extension
-
-Earlier versions of PHPUnit cannot load a custom coverage driver.
+PHPUnit knows only Xdebug and PCOV. This package gives it one class, `ShipMonk\Turbocov\TurbocovDriver`, that collects coverage with turbocov.
 
 ## Installation
 
@@ -24,53 +16,25 @@ composer require --dev shipmonk/turbocov-phpunit
 Set the driver in `phpunit.xml`:
 
 ```xml
-<coverage driver="ShipMonk\Turbocov\TurbocovDriver">
-    <report>
-        <clover outputFile="clover.xml"/>
-    </report>
-</coverage>
+<coverage driver="ShipMonk\Turbocov\TurbocovDriver"/>
 ```
 
-Tell the extension which files to collect, then run PHPUnit:
+Then run PHPUnit with the paths to collect:
 
 ```sh
-php -d turbocov.collect_paths=src vendor/bin/phpunit
+php -d turbocov.collect_paths=src vendor/bin/phpunit --coverage-html coverage
 ```
 
-- `turbocov.collect_paths` takes files and directories. The `<source>` element of `phpunit.xml` does not set it.
-- Set it with `-d` or in `php.ini`. An `<ini>` element in `phpunit.xml` has no effect, because PHP reads this setting only when it starts.
-- PHPUnit gives the setting to the processes of tests that run in a separate process.
+The [README of turbocov](https://github.com/shipmonk-rnd/turbocov#readme) describes the settings, the limitations and the use with older PHPUnit.
 
-PHPUnit shows the driver in its header:
+## Requirements
 
-```
-Runtime:       PHP 8.5.12 with turbocov 0.1.0
-```
+- PHPUnit 13.3 or later
+- The turbocov extension
 
-### Coverage of changed files only
+## Behavior
 
-turbocov has no cost for files that are not in `turbocov.collect_paths`. To collect coverage only for the files that a branch changes:
-
-```sh
-git diff --name-only --diff-filter=AMR origin/master...HEAD -- '*.php' > changed.txt
-php -d turbocov.collect_paths=@changed.txt vendor/bin/phpunit
-```
-
-### When turbocov cannot collect coverage
-
-The driver stops the run before the first test. PHPUnit shows the reason:
-
-```
-An error occurred inside PHPUnit.
-
-Message:  turbocov cannot collect coverage: turbocov.collect_paths is not set
-```
-
-The driver does not continue without coverage. A run with a wrong setup must not give an empty report.
-
-## Limits
-
-- Line coverage only. No branch coverage and no path coverage.
+- The driver stops the run before the first test when turbocov cannot collect coverage. PHPUnit shows the reason. A wrong setup does not give an empty report.
 - The driver uses classes of `phpunit/php-code-coverage` that have no promise of backward compatibility. The tests of this package run with the lowest and the highest supported version.
 
 ## Development
